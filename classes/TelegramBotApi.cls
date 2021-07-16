@@ -1,9 +1,10 @@
 public with sharing class TelegramBotApi {
 
     private static final String TELEGRAM_API_URL = 'https://api.telegram.org/bot';
+    private static final String TELEGRAM_FILE_API_URL = 'https://api.telegram.org/file/bot';
 
     public enum MESSAGE_MOD {Markdown, MarkdownV2}
-    public enum API_COMMAND {sendMessage, pinChatMessage, answerCallbackQuery, editMessageText, answerInlineQuery}
+    public enum API_COMMAND {sendMessage, pinChatMessage, answerCallbackQuery, editMessageText, answerInlineQuery, getFile, downloadFile}
 
     public static void answerCallbackQuery(CallbackQuery callback) {
         sendRequest(callback, API_COMMAND.answerCallbackQuery);
@@ -28,6 +29,43 @@ public with sharing class TelegramBotApi {
         sendRequest(pin, API_COMMAND.pinChatMessage);
     }
 
+    public static FileResult getFile(String fileId) {
+        try {
+            HttpRequest request = new HttpRequest();
+            request.setEndpoint(getEndpoint(API_COMMAND.getFile) + '?file_id='+fileId);
+            request.setMethod('GET');
+            HttpResponse response = new Http().send(request);
+            if (response.getStatusCode() == 200) {
+                return (FileResult)JSON.deserialize(response.getBody(), FileResult.class);
+            } else {
+                Logger.error(response.getStatus() + '|' + response.getStatusCode() + '|' + response.getBody(), 'TelegramBotApi.getFile');
+                return null;
+            }
+        } catch (Exception e) {
+            Logger.error(e, 'TelegramBotApi.getFile');
+            throw e;
+        }
+    }
+
+    public static Blob downloadFile(FileInfo file) {
+        try {
+            HttpRequest request = new HttpRequest();
+            request.setEndpoint(getEndpoint(API_COMMAND.downloadFile) + '/' + file.file_path);
+            request.setMethod('GET');
+            request.setTimeout(60000);
+            HttpResponse response = new Http().send(request);
+            if (response.getStatusCode() == 200) {
+                return response.getBodyAsBlob();
+            } else {
+                Logger.error(response.getStatus() + '|' + response.getStatusCode() + '|' + response.getBody(), 'TelegramBotApi.downloadFile');
+                return null;
+            }
+        } catch (Exception e) {
+            Logger.error(e, 'TelegramBotApi.downloadFile');
+            throw e;
+        }
+    }
+
     private static HttpResponse sendRequest(Object body, API_COMMAND command) {
         HttpRequest request = new HttpRequest();
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
@@ -38,12 +76,28 @@ public with sharing class TelegramBotApi {
     }
 
     private static String getEndpoint(API_COMMAND command) {
-        return TELEGRAM_API_URL + Secured__c.getInstance().TelegramBotToken__c + '/' + command.name();
+        if (command == API_COMMAND.downloadFile) {
+            return TELEGRAM_FILE_API_URL + Secured__c.getInstance().TelegramBotToken__c;
+        } else {
+            return TELEGRAM_API_URL + Secured__c.getInstance().TelegramBotToken__c + '/' + command.name();
+        }
     }
 
     public class Result {
         public Boolean ok;
         public TelegramBotUpdateDTO.TG_Message result;
+    }
+
+    public class FileResult {
+        public Boolean ok;
+        public FileInfo result;
+    }
+
+    public class FileInfo {
+        public String file_id;
+        public String file_unique_id;
+        public Integer file_size;
+        public String file_path;
     }
 
     public class PinMessage {

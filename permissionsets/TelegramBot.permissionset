@@ -70,6 +70,11 @@
         <field>Participant__c.TelegramUsername__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Participant__c.UserNumber__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Telegram Bot</label>
     <objectPermissions>

@@ -12,7 +12,9 @@ public class TelegramBotUpdateDTO {
         public TG_Chat chat;
         public String tDate;
         public String text;
+        public String caption;
         public String arguments;
+        public List<TG_Photo> photo;
         public String author_signature;
         public TG_Message reply_to_message;
         public List<TG_User> new_chat_members;
@@ -43,6 +45,14 @@ public class TelegramBotUpdateDTO {
         public String tDate;
         public TG_ChatMember old_chat_member;
         public TG_ChatMember new_chat_member;
+    }
+
+    public class TG_Photo {
+        public String file_id;
+        public String file_unique_id;
+        public Integer width;
+        public Integer height;
+        public Integer file_size;
     }
 
     public class TG_ChatMember {

@@ -12,7 +12,7 @@ public without sharing class TelegramSayMeFromListener extends TelegramBotUpdate
 
             Participant__c participant = TelegramBotService.buildParticipant(message.tFrom);
             participant.FlatNumber__c = flatNumber;
-            upsert participant Participant__c.TelegramId__c;
+            TelegramBotService.upsertParticipant(participant);
 
             //TelegramBotService.sendNewMemberFlatMessage(message.chat.id, message.message_id, participant);
         } catch (Exception e) {

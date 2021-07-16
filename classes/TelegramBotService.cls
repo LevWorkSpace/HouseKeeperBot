@@ -1,5 +1,7 @@
 public without sharing class TelegramBotService {
 
+    private static final String REGISTER_FLAT_MESSAGE = 'Зареєструйте квартиру в Загальному чаті дому! 🏡\nДля цього відправте в чаті дому \n`/me 31`';
+
     public static Participant__c buildParticipant(TelegramBotUpdateDTO.TG_User user) {
         return new Participant__c(
                 Name = user.first_name,
@@ -121,5 +123,24 @@ public without sharing class TelegramBotService {
         public TelegramBotApi.Message getMessage() {
             return message;
         }
+    }
+
+    public static Participant__c findParticipant(TelegramBotUpdateDTO.TG_User tgUser) {
+        List<Participant__c> ps = [
+                SELECT FlatNumber__c, UserNumber__c
+                FROM Participant__c
+                WHERE TelegramId__c = :tgUser.id
+                OR (TelegramUsername__c != null AND TelegramUsername__c = :tgUser.username)
+                LIMIT 1
+        ];
+        return ps.isEmpty() ? null : ps[0];
+    }
+
+    public static void sendNotRegisteredFlat(String chatId) {
+        TelegramBotApi.sendMessage(
+                new TelegramBotService.MessageBuilder(chatId)
+                        .setText(REGISTER_FLAT_MESSAGE)
+                        .getMessage()
+        );
     }
 }

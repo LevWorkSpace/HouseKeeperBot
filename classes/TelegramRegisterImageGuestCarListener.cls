@@ -25,13 +25,13 @@ public with sharing class TelegramRegisterImageGuestCarListener extends Telegram
     protected override String getCarNumber(TelegramBotUpdateDTO.TG_Message message) {
         String carNumber;
         if (imageFlow == true) {
+            //few quality options
             String fileId = message.photo[message.photo.size() - 1].file_id;
-            //String fileId = 'AgACAgIAAxkBAAIBTmDvLluEdU0AAYLYb_LTx_vF8FLTcwACBbUxG5KzeEt9Rlvc65TyqwEAAwIAA3kAAyAE';
             TelegramBotApi.FileResult fileResult = TelegramBotApi.getFile(fileId);
 
             Blob file = TelegramBotApi.downloadFile(fileResult.result);
 
-            carNumber = CarNumberService.recognizeNumber(file, fileResult.result.file_path);
+            carNumber = CarNumberService.recognizeNumber(file);
         } else {
             carNumber = message.text;
         }

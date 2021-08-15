@@ -1,5 +1,5 @@
 public without sharing class TelegramCreateCrowdfundingListener extends TelegramBotUpdateCommandListener {
-
+    // /collect card_number//option1,option2//description
     public TelegramCreateCrowdfundingListener() {
         super(TELEGRAM_COMMAND.Icollect);
     }

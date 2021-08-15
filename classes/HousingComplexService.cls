@@ -27,12 +27,16 @@ public with sharing class HousingComplexService {
             request.setMethod('GET');
             request.setEndpoint(urlLoginInit);
             HttpResponse response1 = new Http().send(request);
-            if (response1.getStatusCode() != 200 || response1.getHeader('Set-Cookie') == null) {
+            if (response1.getStatusCode() != 200 ||
+                    (response1.getHeader('Set-Cookie') == null
+                            && response1.getHeader('set-cookie') == null)) {
                 HCLoginException e = new HCLoginException();
                 e.setMessage('1|' + response1.getStatus() + '|' + response1.getStatusCode() + '|' + urlLoginInit);
                 throw e;
             }
-            this.cookie = response1.getHeader('Set-Cookie');
+            this.cookie = response1.getHeader('Set-Cookie') == null
+                    ? response1.getHeader('set-cookie')
+                    : response1.getHeader('Set-Cookie');
 
             String pass = (userPassword.size() > 1) ? userPassword[1] : userPassword[0];
             String urlLogin = url + LOGIN2_URL_SUFFIX + '&login=' + userPassword[0].trim() + '&password=' + pass.trim();
@@ -48,7 +52,7 @@ public with sharing class HousingComplexService {
             }
             return response2.getStatusCode() == 302;
         } catch (Exception e) {
-            Logger.error(e, 'HousingComplexService.connect ' + userPassword[0].left(6));
+            Logger.error(e, creds, 'HousingComplexService.connect ' + userPassword[0].left(6));
             return false;
         }
     }

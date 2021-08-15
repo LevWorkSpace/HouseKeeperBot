@@ -14,35 +14,40 @@ global without sharing class TelegramBotCallBack {
             new TelegramSayMeFromListener(),
             new TelegramFromFlatListener(),
             new TelegramListMembersListener(),
-            new TelegramTagFlatListener()
+            new TelegramTagFlatListener(),
+            new TelegramRemoveParticipantListener(),
+            new TelegramHelpListener()
     };
 
     public static List<TelegramBotUpdateCommandListener> privateCommandHandlers = new List<TelegramBotUpdateCommandListener> {
             new TelegramLoginComplexListener(),
             new TelegramRegisterGuestCarListener(),
-            new TelegramEnterBarrier1Listener(),
-            new TelegramExitBarrier1Listener()
+            new TelegramKeyMasterListener(),
+            new TelegramHelpListener()
     };
 
     public static List<TelegramBotUpdateListener> groupListeners = new List<TelegramBotUpdateListener> {
             new TelegramAnswerInlineQueryListener(),
             new TelegramNewMemberListener(),
-            new TelegramNewMemberAnswerListener()
+            new TelegramNewMemberAnswerListener(),
+            new TelegramMemberLeftListener()
             //new TelegramInlineQueryListener()
     };
 
     public static List<TelegramBotUpdateListener> privateListeners = new List<TelegramBotUpdateListener> {
-        new TelegramRegisterImageGuestCarListener()
+            new TelegramRegisterImageGuestCarListener(),
+            new TelegramKeyMasterAnswerListener()
     };
 
     @HttpPost
     global static Boolean postUpdates() {
+        TelegramBotUpdateDTO tUpdate;
         try {
-            TelegramBotUpdateDTO tUpdate = TelegramBotUpdateDTO.deserialize(RestContext.request.requestBody.toString());
+            tUpdate = TelegramBotUpdateDTO.deserialize(RestContext.request.requestBody.toString());
 
-            return isPrivateChat(tUpdate.message) ? privateInteraction(tUpdate) : groupInteraction(tUpdate);
+            return isPrivateChat(tUpdate) ? privateInteraction(tUpdate) : groupInteraction(tUpdate);
         } catch(Exception e) {
-            Logger.error(e, 'TelegramBotCallBack.postUpdates');
+            Logger.error(e, tUpdate, 'TelegramBotCallBack.postUpdates'+RestContext.request.requestURI);
             return false;
         }
     }
@@ -77,7 +82,6 @@ global without sharing class TelegramBotCallBack {
 
     private static Boolean privateInteraction(TelegramBotUpdateDTO tUpdate) {
         if (isNotAuthorizedUser(tUpdate, RestContext.request.requestURI)) return false;
-        Logger.debug(tUpdate, 'test');
 
         if (isCommand(tUpdate)) {
             for (TelegramBotUpdateCommandListener commandHandler : privateCommandHandlers) {
@@ -104,8 +108,11 @@ global without sharing class TelegramBotCallBack {
         return true;
     }
 
-    private static Boolean isPrivateChat(TelegramBotUpdateDTO.TG_Message tgMessage) {
-        return tgMessage != null && tgMessage.chat.type == PRIVATE_CHAT_TYPE;
+    private static Boolean isPrivateChat(TelegramBotUpdateDTO tUpdate) {
+        TelegramBotUpdateDTO.TG_Message message = (tUpdate.message == null && tUpdate.callback_query != null)
+                ? tUpdate.callback_query.message
+                : tUpdate.message;
+        return message != null && message.chat.type == PRIVATE_CHAT_TYPE;
     }
 
     private static Boolean isCommand(TelegramBotUpdateDTO tUpdate) {
@@ -115,12 +122,9 @@ global without sharing class TelegramBotCallBack {
     private static Boolean isNotAuthorizedGroup(TelegramBotUpdateDTO tUpdate, String url) {
         Set<String> supportedChannels = Secured__c.getInstance().SupportedChannels__c != null ? new Set<String>(Secured__c.getInstance().SupportedChannels__c.split(';')) : null;
         if  (supportedChannels != null) {
-            if (tUpdate.message != null && !supportedChannels.contains(tUpdate.message.chat.id)) {
-                Logger.error('chat:' + tUpdate.message.chat.id, 'isNotAuthorized');
-                return true;
-            }
-            if (tUpdate.callback_query != null && tUpdate.callback_query.message != null && !supportedChannels.contains(tUpdate.callback_query.message.chat.id)) {
-                Logger.error('chat:' + tUpdate.callback_query.message.chat.id, 'isNotAuthorized');
+            TelegramBotUpdateDTO.TG_Message message = TelegramBotService.getMessageDTO(tUpdate);
+            if (message != null && !supportedChannels.contains(message.chat.id)) {
+                Logger.error('chat:' + message.chat.id, 'isNotAuthorized');
                 return true;
             }
         }
@@ -136,16 +140,15 @@ global without sharing class TelegramBotCallBack {
             Logger.error('url:' + url, 'isNotAuthorized');
             return true;
         }
-        if (null == TelegramBotService.findParticipant(tUpdate.message != null ? tUpdate.message.tFrom : tUpdate.inline_query.tFrom)) {
-            Logger.error('user:' + JSON.serialize(tUpdate.message != null ? tUpdate.message.tFrom : tUpdate.inline_query.tFrom),
+        TelegramBotUpdateDTO.TG_User user = TelegramBotService.getFromDTO(tUpdate);
+        if (TelegramBotService.findParticipant(user) == null) {
+            Logger.error('user:' + JSON.serialize(user),
                     'isNotAuthorized');
-            if (isCommand(tUpdate)) {
-                TelegramBotApi.sendMessage(
-                        new TelegramBotService.MessageBuilder(tUpdate.message.chat.id)
-                                .setText(REGISTER_MESSAGE)
-                                .getMessage()
-                );
-            }
+            TelegramBotApi.sendMessage(
+                    new TelegramBotService.MessageBuilder(TelegramBotService.getMessageDTO(tUpdate).chat.id)
+                            .setText(REGISTER_MESSAGE)
+                            .getMessage()
+            );
             return true;
         }
         return false;

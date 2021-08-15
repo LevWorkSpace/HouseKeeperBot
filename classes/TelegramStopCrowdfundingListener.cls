@@ -1,5 +1,5 @@
 public without sharing class TelegramStopCrowdfundingListener extends TelegramBotUpdateCommandListener {
-
+    //reply to Crowdfunding message with /stop
     public TelegramStopCrowdfundingListener() {
         super(TELEGRAM_COMMAND.Istop);
     }

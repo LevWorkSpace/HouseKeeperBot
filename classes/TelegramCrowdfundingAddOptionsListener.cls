@@ -1,5 +1,5 @@
 public without sharing class TelegramCrowdfundingAddOptionsListener extends TelegramBotUpdateCommandListener {
-
+    //reply to Crowdfunding message with /add_options 45,65,46
     public TelegramCrowdfundingAddOptionsListener() {
         super(TELEGRAM_COMMAND.Ioptions);
     }

@@ -18,6 +18,7 @@ public class TelegramBotUpdateDTO {
         public String author_signature;
         public TG_Message reply_to_message;
         public List<TG_User> new_chat_members;
+        public TG_User left_chat_member;
         public List<TG_MessageEntity> entities;
         public List<TG_MessageEntity> caption_entities;
     }

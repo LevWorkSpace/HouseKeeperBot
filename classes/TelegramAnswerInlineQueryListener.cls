@@ -8,7 +8,7 @@ public without sharing class TelegramAnswerInlineQueryListener implements Telegr
 
         try {
             crowdFunding = new Crowdfunding(callback.message.chat.id, callback.message.message_id);
-            return true;
+            return crowdFunding.id != null;
         } catch (Exception e) {
             Logger.error(e, 'TelegramAnswerInlineQueryListener.isApplicable ' + callback.message.chat.id + '|' + callback.message.message_id);
             return false;

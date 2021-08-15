@@ -126,15 +126,25 @@ public without sharing class TelegramBotService {
     }
 
     public static Participant__c findParticipant(TelegramBotUpdateDTO.TG_User tgUser) {
+        return findParticipant(tgUser.username, tgUser.id);
+    }
+
+    public static Participant__c findParticipant(Participant__c tgUser) {
+        return findParticipant(tgUser.TelegramUsername__c, tgUser.TelegramId__c);
+    }
+
+    private static Participant__c findParticipant(String tgUsername, String tgId) {
         List<Participant__c> ps = [
-                SELECT FlatNumber__c, UserNumber__c
+                SELECT Id, FlatNumber__c, UserNumber__c
                 FROM Participant__c
-                WHERE TelegramId__c = :tgUser.id
-                OR (TelegramUsername__c != null AND TelegramUsername__c = :tgUser.username)
+                WHERE (TelegramId__c != null AND TelegramId__c = :tgId)
+                OR (TelegramUsername__c != null AND TelegramUsername__c = :tgUsername)
                 LIMIT 1
         ];
         return ps.isEmpty() ? null : ps[0];
     }
+
+
 
     public static void sendNotRegisteredFlat(String chatId) {
         TelegramBotApi.sendMessage(
@@ -142,5 +152,18 @@ public without sharing class TelegramBotService {
                         .setText(REGISTER_FLAT_MESSAGE)
                         .getMessage()
         );
+    }
+
+    public static TelegramBotUpdateDTO.TG_Message getMessageDTO(TelegramBotUpdateDTO tUpdate) {
+        if (tUpdate.message != null) return tUpdate.message;
+        if (tUpdate.callback_query != null && tUpdate.callback_query.message != null) return tUpdate.callback_query.message;
+        return null;
+    }
+
+    public static TelegramBotUpdateDTO.TG_User getFromDTO(TelegramBotUpdateDTO tUpdate) {
+        if (tUpdate.message != null) return tUpdate.message.tFrom;
+        if (tUpdate.callback_query != null) return tUpdate.callback_query.tFrom;
+        if (tUpdate.inline_query != null) return tUpdate.inline_query.tFrom;
+        return null;
     }
 }

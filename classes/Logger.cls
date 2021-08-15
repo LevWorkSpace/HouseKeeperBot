@@ -7,7 +7,7 @@ public with sharing class Logger {
     }
 
     public static void error(Exception e, Object text, String place) {
-        log(e.getMessage() + text.toString(), place, ERROR);
+        log(e.getMessage()+ ' ' + e.getStackTraceString() + ' ' + text.toString(), place, ERROR);
     }
 
     public static void debug(Object text, String place) {

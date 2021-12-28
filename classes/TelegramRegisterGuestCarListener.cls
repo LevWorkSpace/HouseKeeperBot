@@ -40,6 +40,7 @@ public virtual with sharing class TelegramRegisterGuestCarListener extends Teleg
             if (String.isBlank(carNumber)) return;
 
             try {
+                carNumber = CarNumberService.toUpperLatin(carNumber);
                 HousingComplexService service = new HousingComplexService();
                 if(service.connect(p.UserNumber__c)) {
                     String requestNumber = service.addGuestCar(p.FlatNumber__c, carNumber);

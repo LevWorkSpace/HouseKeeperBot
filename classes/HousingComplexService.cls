@@ -7,8 +7,15 @@ public with sharing class HousingComplexService {
     private static final String OPENGATE_URL_SUFFIX = '/go.php?mode=';
     private static final String GUEST_CAR_URL_SUFFIX = '?frame=guests_invited';
     private static final String CAR_KEY = 'p_car_num';
-    private static final String HOURS_KEY = 'p_room';
-    private static final String HOURS = '2';
+    private static final String HOURS_KEY = 'p_hours';
+    private static final String HOURS = '24';
+
+    private static final Integer LINK_WORK_DAYS = 5;
+    private static final Integer LINK_MINUTES_AFTER_USE = 60;
+    private static final String GUEST_LINK_URL_SUFFIX = '?frame=guests_cabinet&menu=create_link&cmd=create_link&ch_1=1&ch_10=10&ch_5=5&p_qty_day='
+            + LINK_WORK_DAYS + '&p_qty_min=' + LINK_MINUTES_AFTER_USE;
+    private static final String LINK_DESCRIPTION_KEY = 'descr_user';
+
 
 
     private String cookie;
@@ -96,7 +103,7 @@ public with sharing class HousingComplexService {
         if (response.getStatusCode() == 302 && response.getStatus() == 'Found'
                 && (response.getHeaderKeys().contains('Location') || response.getHeaderKeys().contains('location'))) {
             String location = response.getHeaderKeys().contains('Location') ? response.getHeader('Location') : response.getHeader('location');
-            return location.right(5);
+            return location.right(6);
         } else {
             String error = flatNumber + '|' + response.getStatus() + '|' + response.getStatusCode() + '/';
             for (String key : response.getHeaderKeys()) {
@@ -105,6 +112,29 @@ public with sharing class HousingComplexService {
             Logger.error(error, 'park request');
             return null;
         }
+    }
+
+    public Boolean createGuestLink(String description) {
+        String urlCreateLink = url + GUEST_LINK_URL_SUFFIX + '&' + LINK_DESCRIPTION_KEY + '=' + description;
+        HttpRequest request = new HttpRequest();
+        request.setMethod('GET');
+        request.setEndpoint(urlCreateLink);
+        request.setHeader('cookie', this.cookie);
+        HttpResponse response = new Http().send(request);
+        System.debug(response.getStatusCode());
+        System.debug(response.getBody());
+        if (response.getStatusCode() != 200 || response.getBody() == null || !response.getBody().contains('"color"')) {
+            HCLoginException e = new HCLoginException();
+            e.setMessage('openGate|' + response.getStatus() + '|' + response.getStatusCode() + '|' + response.getBody() + '|' + urlCreateLink);
+            throw e;
+        }
+
+        Boolean result = response.getBody().contains('"color":"#00FF00"');
+
+        if (!result) {
+            Logger.error(response.getBody(), 'TelegramExitBarrier1Listener.openGate');
+        }
+        return result;
     }
 
     public static void sendUnknownError(String chatId) {

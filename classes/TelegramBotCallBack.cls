@@ -15,8 +15,7 @@ global without sharing class TelegramBotCallBack {
             new TelegramFromFlatListener(),
             new TelegramListMembersListener(),
             new TelegramTagFlatListener(),
-            new TelegramRemoveParticipantListener(),
-            new TelegramHelpListener()
+            new TelegramRemoveParticipantListener()
     };
 
     public static List<TelegramBotUpdateCommandListener> privateCommandHandlers = new List<TelegramBotUpdateCommandListener> {

@@ -27,4 +27,27 @@ public with sharing class CarNumberService {
         req.setTimeout(120000);
         return new Http().send(req);
     }
+
+    public static String toUpperLatin(String car) {
+        car = car.toUpperCase();
+        for (String key : UPPER_CYRILLIC_TO_LATIN.keySet()) {
+            car = car.replace(key, UPPER_CYRILLIC_TO_LATIN.get(key));
+        }
+        return car;
+    }
+
+    private static final Map<String, String> UPPER_CYRILLIC_TO_LATIN = new Map<String, String>{
+            'А' => 'A',
+            'В' => 'B',
+            'С' => 'C',
+            'Е' => 'E',
+            'Н' => 'H',
+            'І' => 'I',
+            'К' => 'K',
+            'М' => 'M',
+            'О' => 'O',
+            'Р' => 'P',
+            'Т' => 'T',
+            'Х' => 'X'
+    };
 }

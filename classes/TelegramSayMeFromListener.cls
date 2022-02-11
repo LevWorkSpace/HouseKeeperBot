@@ -15,6 +15,8 @@ public without sharing class TelegramSayMeFromListener extends TelegramBotUpdate
             TelegramBotService.upsertParticipant(participant);
 
             TelegramBotService.sendNewMemberFlatMessage(message.chat.id, message.message_id, participant);
+            TelegramBotService.updateAllMembersMessage(message.chat.id);
+
         } catch (Exception e) {
             Logger.error(e, message, 'TelegramSayMeFromListener.dispatch');
         }

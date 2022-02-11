@@ -166,4 +166,34 @@ public without sharing class TelegramBotService {
         if (tUpdate.inline_query != null) return tUpdate.inline_query.tFrom;
         return null;
     }
+
+    public static String formatAllMembersList() {
+        String text = '';
+        List<Participant__c> ps = [SELECT TelegramUsername__c, TelegramId__c, Name, LastName__c, FlatNumber__c FROM Participant__c ORDER BY FlatNumber__c NULLS LAST];
+        for (Participant__c p : ps) {
+            text += format(p) + '\n';
+        }
+        text += 'Всього: ' + ps.size();
+        return text;
+    }
+
+    @future(callout=true)
+    public static void updateAllMembersMessage(String chatId) {
+        List<Message__c> ms = [SELECT MessageId__c FROM Message__c
+                               WHERE Chat__r.IsActive__c = true AND Chat__r.ChatId__c = :chatId
+                               ORDER BY CreatedDate DESC LIMIT 1];
+        if (!ms.isEmpty()) {
+            TelegramBotApi.sendMessage(
+                    new MessageBuilder(chatId)
+                            .setMessageId(ms[0].MessageId__c)
+                            .setText(formatAllMembersList())
+                            .getMessage()
+            );
+        }
+    }
+
+    private static String format(Participant__c p) {
+        String flat = p.FlatNumber__c != null ? String.valueOf(p.FlatNumber__c) : '?';
+        return flat + ' - ' + TelegramBotService.mention(p);
+    }
 }

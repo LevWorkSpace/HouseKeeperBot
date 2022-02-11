@@ -9,23 +9,20 @@ public without sharing class TelegramListMembersListener extends TelegramBotUpda
         try {
             if (!TelegramBotService.isAdminUser(message.tFrom)) return;
 
-            String text = '';
-            for (Participant__c p : [SELECT TelegramUsername__c, TelegramId__c, Name, LastName__c, FlatNumber__c FROM Participant__c ORDER BY FlatNumber__c NULLS LAST]) {
-                text += format(p) + '\n';
-            }
+            String text = TelegramBotService.formatAllMembersList();
+
             System.enqueueJob(
                     new TelegramQueueable(
                             TelegramBotApi.API_COMMAND.sendMessage,
-                            new TelegramBotService.MessageBuilder(tUpdate.message.chat.id).setText(text).disableNotifications().getMessage()
-                    )
+                            new TelegramBotService.MessageBuilder(tUpdate.message.chat.id)
+                                    .setText(text)
+                                    .disableNotifications()
+                                    .getMessage()
+                    ).setMessageTypeToSave('All Members')
+                    .setPinMessage()
             );
         } catch (Exception e) {
             Logger.error(e, message, 'TelegramListMembersListener.dispatch');
         }
-    }
-
-    private static String format(Participant__c p) {
-        String flat = p.FlatNumber__c != null ? String.valueOf(p.FlatNumber__c) : '?';
-        return flat + ' - ' + TelegramBotService.mention(p);
     }
 }

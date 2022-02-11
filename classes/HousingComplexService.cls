@@ -9,6 +9,7 @@ public with sharing class HousingComplexService {
     private static final String CAR_KEY = 'p_car_num';
     private static final String HOURS_KEY = 'p_hours';
     private static final String HOURS = '24';
+    private static final Integer TIMEOUT = 20000;
 
     private static final Integer LINK_WORK_DAYS = 5;
     private static final Integer LINK_MINUTES_AFTER_USE = 60;
@@ -33,6 +34,7 @@ public with sharing class HousingComplexService {
             HttpRequest request = new HttpRequest();
             request.setMethod('GET');
             request.setEndpoint(urlLoginInit);
+            request.setTimeout(TIMEOUT);
             HttpResponse response1 = new Http().send(request);
             if (response1.getStatusCode() != 200 ||
                     (response1.getHeader('Set-Cookie') == null
@@ -51,6 +53,7 @@ public with sharing class HousingComplexService {
             request2.setMethod('GET');
             request2.setEndpoint(urlLogin);
             request2.setHeader('cookie', this.cookie);
+            request2.setTimeout(TIMEOUT);
             HttpResponse response2 = new Http().send(request2);
             if (response2.getStatusCode() != 200 && response2.getStatusCode() != 302) {
                 HCLoginException e = new HCLoginException();
@@ -70,6 +73,8 @@ public with sharing class HousingComplexService {
         request.setMethod('GET');
         request.setEndpoint(urlOpen);
         request.setHeader('cookie', this.cookie);
+        request.setTimeout(TIMEOUT);
+
         HttpResponse response = new Http().send(request);
 
         if (response.getStatusCode() != 200 || response.getBody() == null || !response.getBody().contains('"color"')) {
@@ -99,6 +104,8 @@ public with sharing class HousingComplexService {
         request.setBody(encodedBody);
         request.setHeader('Content-Type', 'application/x-www-form-urlencoded');
         request.setHeader('Content-Length', String.valueOf(encodedBody.length()));
+        request.setTimeout(TIMEOUT);
+
         HttpResponse response = new Http().send(request);
         if (response.getStatusCode() == 302 && response.getStatus() == 'Found'
                 && (response.getHeaderKeys().contains('Location') || response.getHeaderKeys().contains('location'))) {

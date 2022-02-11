@@ -18,6 +18,7 @@ public with sharing class TelegramNewMemberAnswerListener implements TelegramBot
                 newMember.FlatNumber__c = flatNumber;
                 TelegramBotService.upsertParticipant(newMember);
                 TelegramBotService.sendNewMemberFlatMessage(message.chat.id, message.message_id, newMember);
+                TelegramBotService.updateAllMembersMessage(message.chat.id);
             }
         } catch (Exception e) {
             Logger.error(e, message, 'TelegramNewMemberAnswerListener.dispatch');

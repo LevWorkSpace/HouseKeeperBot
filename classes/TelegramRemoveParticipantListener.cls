@@ -16,6 +16,8 @@ public without sharing class TelegramRemoveParticipantListener  extends Telegram
 
             Logger.debug(mentionUser, 'Removing user');
             delete mentionUser;
+            TelegramBotService.updateAllMembersMessage(message.chat.id);
+
         } catch (Exception e) {
             Logger.error(e, message, 'TelegramRemoveParticipantListener.dispatch');
         }

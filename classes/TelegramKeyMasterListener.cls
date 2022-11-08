@@ -1,10 +1,21 @@
 public with sharing class TelegramKeyMasterListener extends TelegramBotUpdateCommandListener {
 
     public static final String TEXT_MESSAGE = 'Сім-сім...';
-    private static final Map<String, String> GATE_CODE_TO_GATE = new Map<String, String> {
-            'p_1_cucle_1' => 'КПП 1',
-            'p_3_cucle_1' => 'Хвіртка',
-            'hp_1_cucle_1' => 'КПП 2'
+
+    private static final List<Map<String, String>> BUTTONS_LAYOUT = new List<Map<String, String>> {
+            new Map<String, String> {
+                    'p_1_cucle_1' => '🚘1 - шлагбаум',
+                    'hp_1_cucle_1' => '🚘2 - шлагбаум'
+            },
+            new Map<String, String> {
+                    'p_3_cucle_19' => '🛒🚶- хвіртка',
+                    'p_3_cucle_17' => '⬅🚶 - турнікет',
+                    'p_3_cucle_15' => '➡🚶 - турнікет'
+            },
+            new Map<String, String> {
+                    'SOCKET_RELAY_9.133:88_1' => '🏡1 - під‘їзд',
+                    'SOCKET_RELAY_9.133:88_2' => '🏡2 - під‘їзд'
+            }
     };
 
     public TelegramKeyMasterListener() {
@@ -28,19 +39,13 @@ public with sharing class TelegramKeyMasterListener extends TelegramBotUpdateCom
             TelegramBotApi.sendMessage(
                     new TelegramBotService.MessageBuilder(message.chat.id)
                             .setText(TEXT_MESSAGE)
-                            .setReplyMarkup(JSON.serialize(getInlineKeyBoard()))
+                            .setReplyMarkup(JSON.serialize(
+                                    new TelegramBotApi.ReplyMarkup(BUTTONS_LAYOUT))
+                            )
                             .getMessage()
             );
         } catch (Exception e) {
             Logger.error(e, tUpdate.message, 'TelegramKeyMasterListener.dispatch');
         }
-    }
-
-    private TelegramBotApi.ReplyMarkup getInlineKeyBoard() {
-        List<TelegramBotApi.InlineKeyboardButton> buttons = new List<TelegramBotApi.InlineKeyboardButton>();
-        for (String code : GATE_CODE_TO_GATE.keySet()) {
-            buttons.add(new TelegramBotApi.InlineKeyboardButton(GATE_CODE_TO_GATE.get(code), code));
-        }
-        return new TelegramBotApi.ReplyMarkup(buttons);
     }
 }

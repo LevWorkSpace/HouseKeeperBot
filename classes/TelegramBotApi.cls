@@ -144,6 +144,21 @@ public with sharing class TelegramBotApi {
         public ReplyMarkup(List<InlineKeyboardButton> buttons) {
             inline_keyboard = new List<List<InlineKeyboardButton>>{buttons};
         }
+
+        public ReplyMarkup(List<List<InlineKeyboardButton>> buttonsLayout) {
+            inline_keyboard = buttonsLayout;
+        }
+
+        public ReplyMarkup(List<Map<String, String>> layout) {
+            inline_keyboard = new List<List<TelegramBotApi.InlineKeyboardButton>>();
+            for (Map<String, String> row : layout) {
+                List<TelegramBotApi.InlineKeyboardButton> buttons = new List<TelegramBotApi.InlineKeyboardButton>();
+                for (String code : row.keySet()) {
+                    buttons.add(new TelegramBotApi.InlineKeyboardButton(row.get(code), code));
+                }
+                inline_keyboard.add(buttons);
+            }
+        }
     }
 
     public class InlineQuery {

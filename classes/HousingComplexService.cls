@@ -36,6 +36,7 @@ public with sharing class HousingComplexService {
             request.setEndpoint(urlLoginInit);
             request.setTimeout(TIMEOUT);
             HttpResponse response1 = new Http().send(request);
+
             if (response1.getStatusCode() != 200 ||
                     (response1.getHeader('Set-Cookie') == null
                             && response1.getHeader('set-cookie') == null)) {
@@ -46,7 +47,6 @@ public with sharing class HousingComplexService {
             this.cookie = response1.getHeader('Set-Cookie') == null
                     ? response1.getHeader('set-cookie')
                     : response1.getHeader('Set-Cookie');
-
             String pass = (userPassword.size() > 1) ? userPassword[1] : userPassword[0];
             String urlLogin = url + LOGIN2_URL_SUFFIX + '&login=' + userPassword[0].trim() + '&password=' + pass.trim();
             HttpRequest request2 = new HttpRequest();
@@ -96,6 +96,7 @@ public with sharing class HousingComplexService {
         HttpRequest request = new HttpRequest();
         request.setEndpoint(url);
         request.setHeader('cookie', this.cookie);
+
         String encodedBody = CAR_KEY + '=' + EncodingUtil.urlEncode(car, 'UTF-8')
                 + '&' + HOURS_KEY + '=' + HOURS
                 + '&' + carAdditionalParam;
@@ -110,6 +111,14 @@ public with sharing class HousingComplexService {
         if (response.getStatusCode() == 302 && response.getStatus() == 'Found'
                 && (response.getHeaderKeys().contains('Location') || response.getHeaderKeys().contains('location'))) {
             String location = response.getHeaderKeys().contains('Location') ? response.getHeader('Location') : response.getHeader('location');
+
+            //temp debug to find issue
+            if(!location.right(6).isNumeric()) {
+                Logger.error(location, this.cookie);
+            } else {
+                Logger.debug(location, this.cookie);
+            }
+
             return location.right(6);
         } else {
             String error = flatNumber + '|' + response.getStatus() + '|' + response.getStatusCode() + '/';

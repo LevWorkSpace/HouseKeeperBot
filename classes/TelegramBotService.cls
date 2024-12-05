@@ -26,8 +26,17 @@ public without sharing class TelegramBotService {
     }
 
     public static Integer getFlatNumber(String text) {
-        Matcher matcher = Pattern.compile('(\\d+)').matcher(text);
-        return matcher.find() && matcher.groupCount() > 0 ? Integer.valueOf(matcher.group(1)) : null;
+        try {
+            return Integer.valueOf(text.trim());
+        } catch (Exception e) {
+            Matcher matcher = Pattern.compile('[ |.|к|кв](\\d+)').matcher(text);
+            if (matcher.find() && matcher.groupCount() > 0) {
+                return Integer.valueOf(matcher.group(1).trim());
+            } else {
+                Matcher matcher2 = Pattern.compile('^(\\d+)\\D+').matcher(text);
+                return matcher2.find() && matcher2.groupCount() > 0 ? Integer.valueOf(matcher2.group(1).trim()) : null;
+            }
+        }
     }
 
     public static void upsertParticipant(Participant__c participant) {
@@ -135,7 +144,7 @@ public without sharing class TelegramBotService {
 
     private static Participant__c findParticipant(String tgUsername, String tgId) {
         List<Participant__c> ps = [
-                SELECT Id, FlatNumber__c, UserNumber__c
+                SELECT Id, FlatNumber__c, UserNumber__c, ChatId__c, TelegramUsername__c, TelegramId__c
                 FROM Participant__c
                 WHERE (TelegramId__c != null AND TelegramId__c = :tgId)
                 OR (TelegramUsername__c != null AND TelegramUsername__c = :tgUsername)

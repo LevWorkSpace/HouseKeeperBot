@@ -8,6 +8,14 @@ public without sharing class TelegramLoginComplexListener extends TelegramBotUpd
     }
 
     public override void dispatch(TelegramBotUpdateDTO tUpdate) {
+        //shutdown
+        TelegramBotApi.sendMessage(
+            new TelegramBotService.MessageBuilder(tUpdate.message.chat.id)
+                .setText('Service unavailable')
+                .getMessage()
+        );
+        if (true) return;
+
         TelegramBotUpdateDTO.TG_Message message = tUpdate.message;
         try {
             Participant__c p = TelegramBotService.findParticipant(message.tFrom);

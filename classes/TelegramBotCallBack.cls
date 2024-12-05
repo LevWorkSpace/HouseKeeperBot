@@ -22,7 +22,10 @@ global without sharing class TelegramBotCallBack {
             new TelegramLoginComplexListener(),
             new TelegramRegisterGuestCarListener(),
             new TelegramKeyMasterListener(),
-            new TelegramHelpListener()
+            new TelegramHelpListener(),
+            new TelegramFromFlatListener(),
+            new TelegramSubscribeToBlackout(),
+            new TelegramUnsubscribeToBlackout()
     };
 
     public static List<TelegramBotUpdateListener> groupListeners = new List<TelegramBotUpdateListener> {

@@ -7,6 +7,13 @@ public with sharing class TelegramUnsubscribeToBlackout extends TelegramBotUpdat
     }
 
     public override void dispatch(TelegramBotUpdateDTO tUpdate) {
+        //shutdown
+        TelegramBotApi.sendMessage(
+            new TelegramBotService.MessageBuilder(tUpdate.message.chat.id)
+                .setText('Service unavailable')
+                .getMessage()
+        );
+        if (true) return;
         TelegramBotUpdateDTO.TG_Message message = tUpdate.message;
         try {
             Participant__c fromUser = TelegramBotService.findParticipant(message.tFrom);

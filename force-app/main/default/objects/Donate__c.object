@@ -152,53 +152,6 @@
     <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
-    <fields>
-        <fullName>Amount__c</fullName>
-        <externalId>false</externalId>
-        <label>Amount</label>
-        <precision>18</precision>
-        <required>false</required>
-        <scale>2</scale>
-        <trackTrending>false</trackTrending>
-        <type>Currency</type>
-    </fields>
-    <fields>
-        <fullName>CrowdFunding__c</fullName>
-        <externalId>false</externalId>
-        <label>Crowd Funding</label>
-        <referenceTo>CrowdFunding__c</referenceTo>
-        <relationshipLabel>Donates</relationshipLabel>
-        <relationshipName>Donates</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
-    </fields>
-    <fields>
-        <fullName>DonateId__c</fullName>
-        <caseSensitive>false</caseSensitive>
-        <externalId>true</externalId>
-        <label>Donate Id</label>
-        <length>255</length>
-        <required>true</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>true</unique>
-    </fields>
-    <fields>
-        <fullName>Participant__c</fullName>
-        <externalId>false</externalId>
-        <label>Participant</label>
-        <referenceTo>Participant__c</referenceTo>
-        <relationshipName>Funds</relationshipName>
-        <relationshipOrder>1</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
-    </fields>
     <label>Donate</label>
     <nameField>
         <displayFormat>D-{0000}</displayFormat>
@@ -206,7 +159,7 @@
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Donates</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts></searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

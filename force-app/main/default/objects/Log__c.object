@@ -152,65 +152,14 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ReadWrite</externalSharingModel>
-    <fields>
-        <fullName>Message__c</fullName>
-        <externalId>false</externalId>
-        <label>Message</label>
-        <length>32768</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>3</visibleLines>
-    </fields>
-    <fields>
-        <fullName>Place__c</fullName>
-        <externalId>false</externalId>
-        <label>Place</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Type__c</fullName>
-        <externalId>false</externalId>
-        <label>Type</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Picklist</type>
-        <valueSet>
-            <valueSetDefinition>
-                <sorted>false</sorted>
-                <value>
-                    <fullName>Error</fullName>
-                    <default>true</default>
-                    <label>Error</label>
-                </value>
-                <value>
-                    <fullName>Debug</fullName>
-                    <default>false</default>
-                    <label>Debug</label>
-                </value>
-            </valueSetDefinition>
-        </valueSet>
-    </fields>
     <label>Log</label>
-    <listViews>
-        <fullName>All</fullName>
-        <columns>NAME</columns>
-        <columns>Message__c</columns>
-        <columns>CREATED_DATE</columns>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
-    </listViews>
     <nameField>
         <displayFormat>Log-{0000}</displayFormat>
         <label>Name</label>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Logs</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

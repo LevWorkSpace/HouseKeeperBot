@@ -30,7 +30,7 @@ public virtual with sharing class TelegramRegisterGuestCarListener extends Teleg
                 .getMessage()
         );
         if (true) return;
-
+        
         TelegramBotUpdateDTO.TG_Message message = tUpdate.message;
         try {
             Participant__c p = TelegramBotService.findParticipant(tUpdate.message.tFrom);

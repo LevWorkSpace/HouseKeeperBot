@@ -47,6 +47,13 @@ public with sharing class HousingComplexService {
             this.cookie = response1.getHeader('Set-Cookie') == null
                     ? response1.getHeader('set-cookie')
                     : response1.getHeader('Set-Cookie');
+
+            /*String phpSesionID = this.cookie.substringBefore('path=/;').trim().removeEnd(';');
+            System.debug(phpSesionID);
+            String cfduid = this.cookie.substringAfter('path=/;').substringBefore('expires=').trim();
+            System.debug(cfduid);
+            this.cookie = cfduid;*/
+
             String pass = (userPassword.size() > 1) ? userPassword[1] : userPassword[0];
             String urlLogin = url + LOGIN2_URL_SUFFIX + '&login=' + userPassword[0].trim() + '&password=' + pass.trim();
             HttpRequest request2 = new HttpRequest();
@@ -95,7 +102,13 @@ public with sharing class HousingComplexService {
         String url = url + GUEST_CAR_URL_SUFFIX;
         HttpRequest request = new HttpRequest();
         request.setEndpoint(url);
+
+        //temp fix
+
+
+
         request.setHeader('cookie', this.cookie);
+
 
         String encodedBody = CAR_KEY + '=' + EncodingUtil.urlEncode(car, 'UTF-8')
                 + '&' + HOURS_KEY + '=' + HOURS

@@ -152,55 +152,13 @@
     <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <fields>
-        <fullName>Chat__c</fullName>
-        <externalId>false</externalId>
-        <label>Chat</label>
-        <referenceTo>Chat__c</referenceTo>
-        <relationshipLabel>Messages</relationshipLabel>
-        <relationshipName>Messages</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
-    </fields>
-    <fields>
-        <fullName>MessageId__c</fullName>
-        <externalId>true</externalId>
-        <label>MessageId</label>
-        <length>255</length>
-        <required>true</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Type__c</fullName>
-        <externalId>false</externalId>
-        <label>Type</label>
-        <required>true</required>
-        <trackTrending>false</trackTrending>
-        <type>Picklist</type>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetDefinition>
-                <sorted>false</sorted>
-                <value>
-                    <fullName>All Members</fullName>
-                    <default>false</default>
-                    <label>All Members</label>
-                </value>
-            </valueSetDefinition>
-        </valueSet>
-    </fields>
     <label>Message</label>
     <nameField>
         <label>Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>Messages</pluralLabel>
-    <searchLayouts/>
+    <searchLayouts></searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>

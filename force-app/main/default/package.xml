@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Blackout_NotifyStartPeriod</members>
+        <members>CarNumberService</members>
+        <members>Crowdfunding</members>
+        <members>HousingComplexService</members>
+        <members>Logger</members>
+        <members>TelegramAnswerInlineQueryListener</members>
+        <members>TelegramBotApi</members>
+        <members>TelegramBotCallBack</members>
+        <members>TelegramBotService</members>
+        <members>TelegramBotUpdateCommandListener</members>
+        <members>TelegramBotUpdateDTO</members>
+        <members>TelegramBotUpdateListener</members>
+        <members>TelegramCreateCrowdfundingListener</members>
+        <members>TelegramCrowdfundingAddOptionsListener</members>
+        <members>TelegramFromFlatListener</members>
+        <members>TelegramHelpListener</members>
+        <members>TelegramInlineQueryListener</members>
+        <members>TelegramKeyMasterAnswerListener</members>
+        <members>TelegramKeyMasterListener</members>
+        <members>TelegramListMembersListener</members>
+        <members>TelegramLoginComplexListener</members>
+        <members>TelegramMemberLeftListener</members>
+        <members>TelegramNewMemberAnswerListener</members>
+        <members>TelegramNewMemberListener</members>
+        <members>TelegramQueueable</members>
+        <members>TelegramRegisterGuestCarListener</members>
+        <members>TelegramRegisterImageGuestCarListener</members>
+        <members>TelegramRemoveParticipantListener</members>
+        <members>TelegramSayMeFromListener</members>
+        <members>TelegramStopCrowdfundingListener</members>
+        <members>TelegramSubscribeToBlackout</members>
+        <members>TelegramTagFlatListener</members>
+        <members>TelegramUnsubscribeToBlackout</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Logger</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>Chat__c</members>
+        <members>CrowdFunding__c</members>
+        <members>Donate__c</members>
+        <members>GuestCarRegistration__c</members>
+        <members>LogEvent__e</members>
+        <members>Log__c</members>
+        <members>Message__c</members>
+        <members>Participant__c</members>
+        <members>Secured__c</members>
+        <members>TelegramLongSettings__mdt</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>TelegramBot</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
+        <members>Chat__c-Chat Layout</members>
+        <members>CrowdFunding__c-Crowd Funding Layout</members>
+        <members>Donate__c-Donate Layout</members>
+        <members>Message__c-Message Layout</members>
+        <members>Participant__c-Participant Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>CrowdFunding__c</members>
+        <members>Participant__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>*</members>
+        <name>CustomMetadata</name>
+    </types>
+    <version>59.0</version>
+</Package>

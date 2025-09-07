@@ -15,7 +15,7 @@ public without sharing class TelegramLoginComplexListener extends TelegramBotUpd
                 .getMessage()
         );
         if (true) return;
-
+        
         TelegramBotUpdateDTO.TG_Message message = tUpdate.message;
         try {
             Participant__c p = TelegramBotService.findParticipant(message.tFrom);
